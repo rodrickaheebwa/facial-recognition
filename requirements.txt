@@ -1,0 +1,5 @@
+cmake
+wheel
+python3-wheel
+opencv-python
+face_recognition

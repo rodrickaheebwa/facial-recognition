@@ -1,0 +1,2 @@
+face detection is finding a face in imagery or videos.
+facial recognition is identifying that face.
