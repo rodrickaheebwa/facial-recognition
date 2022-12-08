@@ -1,5 +1,7 @@
 cmake
+dlib
 wheel
-python3-wheel
 opencv-python
+opencv-contrib-python
 face_recognition
+caer

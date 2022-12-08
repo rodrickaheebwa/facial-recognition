@@ -1,2 +1,19 @@
 face detection is finding a face in imagery or videos.
 facial recognition is identifying that face.
+
+face-recognition workings:
+- load_image_file()
+- convert loaded image from BGR to RGB, because face-recognition library understands RGB
+- find faces in the image plus their encodings
+- face_loc = face_locations()[0] # for testing, we only use an image with one face
+- face_enc = face_encodings()[0] # for testing, we only use an image with one face
+- compare faces (their encodings technically)
+- results = compare_faces()
+- facedistances = face_distance()
+- while sentdex uses the first 'true' match, murtaza uses the lowest face distance for best match
+
+cv2 workings:
+- imread() # read images
+- VideoCapture() # read videos
+- imshow()
+- waitKey()
