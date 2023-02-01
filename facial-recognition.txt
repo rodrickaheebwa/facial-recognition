@@ -17,3 +17,11 @@ cv2 workings:
 - VideoCapture() # read videos
 - imshow()
 - waitKey()
+
+ignored folders:
+driver - chrome driver executable
+images - directory for downloads
+known-faces - different folders of known people
+pics - also unknown-faces
+unknown-faces - multiple images to be run against the model
+videos - videos to be run against the model

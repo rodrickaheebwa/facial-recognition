@@ -5,3 +5,6 @@ opencv-python
 opencv-contrib-python
 face_recognition
 caer
+selenium
+Pillow
+requests

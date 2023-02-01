@@ -1,15 +1,13 @@
 import face_recognition
 import cv2
 import os
+import pickle
 
 KNOWN_FACES_DIR = "known-faces"
-# UNKNOWN_FACES_DIR = "unknown-faces"
-UNKNOWN_FACES_DIR = "pics"
 TOLERANCE = 0.5
 FRAME_THICKNESS = 3
 FONT_THICKNESS = 2
-# MODEL = "cnn"
-MODEL = "hog"
+MODEL = "hog" # MODEL = "cnn"
 
 # Returns (R, G, B) from name
 def name_to_color(name):
@@ -17,6 +15,8 @@ def name_to_color(name):
     # lowercased character ord() value rage is 97 to 122, substract 97, multiply by 8
     color = [(ord(c.lower())-97)*8 for c in name[:3]]
     return color
+
+video = cv2.VideoCapture("videos/video1.mp4")
 
 print('Loading known faces...')
 known_faces = []
@@ -40,35 +40,20 @@ for name in os.listdir(KNOWN_FACES_DIR):
 
 print('Processing unknown faces...')
 
-# Now let's loop over a folder of faces we want to label
-for filename in os.listdir(UNKNOWN_FACES_DIR):
+print(known_names)
 
-    # Load image
-    # print(f'Filename {filename}', end='')
-    image = face_recognition.load_image_file(os.path.join(UNKNOWN_FACES_DIR, filename))
+while True:
+    ret, image = video.read()
 
-    # capture face locations, since there could be several objects
     locations = face_recognition.face_locations(image, model=MODEL)
-
-    # encode the images
     encodings = face_recognition.face_encodings(image, locations)
 
-    # use OpenCV to draw rectangles on found faces
-    # convert rgb to bgr, that's what OpenCV uses
-    image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-
-    # print(f', found {len(encodings)} face(s)')
-    
     for face_encoding, face_location in zip(encodings, locations):
 
-        # We use compare_faces (but might use face_distance as well)
-        # Returns array of True/False values in order of passed known_faces
         results = face_recognition.compare_faces(known_faces, face_encoding, TOLERANCE)
-        # print(results)
 
-        if True in results:  # If at least one is true, get a name of first of found labels
+        if True in results:
             match = known_names[results.index(True)]
-            # print(f' - {match} from {results}')
 
             # Each location contains positions in order: top, right, bottom, left
             top_left = (face_location[3], face_location[0])
@@ -80,7 +65,7 @@ for filename in os.listdir(UNKNOWN_FACES_DIR):
             # Paint frame
             cv2.rectangle(image, top_left, bottom_right, color, FRAME_THICKNESS)
 
-            # Now we need smaller, filled grame below for a name
+            # Now we need smaller, filled frame below for a name
             # This time we use bottom in both corners - to start from bottom and move 50 pixels down
             top_left = (face_location[3], face_location[2])
             bottom_right = (face_location[1], face_location[2] + 22)
@@ -91,7 +76,9 @@ for filename in os.listdir(UNKNOWN_FACES_DIR):
             # Wite a name
             cv2.putText(image, match, (face_location[3] + 10, face_location[2] + 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (200, 200, 200), FONT_THICKNESS)
 
-    # Show image
-    cv2.imshow(filename, image)
-    cv2.waitKey(0)
+    # Show frame
+    cv2.imshow("filename", image)
+    if cv2.waitKey(1) & 0xFF == ord("q"):
+        break
+    # cv2.waitKey(5000)
     # cv2.destroyWindow(filename)

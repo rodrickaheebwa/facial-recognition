@@ -1,0 +1,2 @@
+facial recognition service for social media content, images and videos.
+E.g. videos on twitter that feature a certain person.
